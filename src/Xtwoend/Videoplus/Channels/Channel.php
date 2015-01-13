@@ -72,4 +72,18 @@ class Channel extends Model {
     {
       return $this->belongsToMany(static::$video, 'channel_videos');
     }
+
+    /**
+     * Model User
+     */
+    protected static $user = 'Xtwoend\Videoplus\Users\User';
+    
+    /**
+     *
+     * @params
+     */
+    public function owner()
+    {
+        return $this->belongsTo(static::$user, 'owner_id');
+    }
   }
