@@ -24,6 +24,8 @@ use Xtwoend\Videoplus\Observers\SlugObserver;
 
 class Post extends Model {	
 
+	use \Xtwoend\Videoplus\Tagging\Traits\Taggable;
+	
 	/**
 	 * The database table used by the model.
 	 *
