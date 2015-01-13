@@ -49,7 +49,7 @@ trait VideoRelations {
     }
 
 
-      /**
+    /**
      * Model User
      */
     protected static $user = 'Xtwoend\Videoplus\Users\User';
