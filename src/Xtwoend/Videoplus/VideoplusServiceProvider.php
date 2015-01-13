@@ -26,6 +26,7 @@ use Xtwoend\Videoplus\Users\Repositories\UserRepository;
 use Xtwoend\Videoplus\Category\Repositories\CategoryRepository;
 use Xtwoend\Videoplus\Sliders\Repositories\SlideRepository;
 use Xtwoend\Videoplus\Activity\Repositories\ActivityRepository;
+use Xtwoend\Videoplus\OnDemand\Repositories\OnDemandRepository;
 use Xtwoend\Videoplus\Competitions\Repositories\CompetitionRepository;
 use Xtwoend\Videoplus\Users\MPSdk;
 use Event;
@@ -64,6 +65,7 @@ class VideoplusServiceProvider extends ServiceProvider {
 		$this->registerSlideRepository();
 		$this->registerActivityRepository();
 		$this->registerCompetitionRepository();
+		$this->registerOnDemandRepository();
 		$this->registerMpApi();
 	}
 
@@ -115,7 +117,7 @@ class VideoplusServiceProvider extends ServiceProvider {
 	}
 
 	/**
-	* register Channel repository
+	* register Category repository
 	*
 	*/
 	public function registerCategoryRepository()
@@ -128,6 +130,23 @@ class VideoplusServiceProvider extends ServiceProvider {
 
 			//register post repository
 			return new CategoryRepository(new $class);
+		});
+	}
+
+	/**
+	* register OnDemand repository
+	*
+	*/
+	public function registerOnDemandRepository()
+	{
+		$this->app->bind('Xtwoend\Videoplus\OnDemand\OnDemandInterface', function($app)
+		{
+			// initial model post
+			$model = 'Xtwoend\Videoplus\OnDemand\OnDemand';
+			$class = '\\'.ltrim($model, '\\');
+
+			//register post repository
+			return new OnDemandRepository(new $class);
 		});
 	}
 
