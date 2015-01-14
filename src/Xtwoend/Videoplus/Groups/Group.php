@@ -35,7 +35,7 @@ class Group extends Model {
   *
   * @var string
   */
-  protected $table = 'groups';
+  protected $table = 'mpgroups';
 
   /**
   * The primary key for the model.
@@ -69,7 +69,7 @@ class Group extends Model {
 
     public function videos()
     {
-      return $this->belongsToMany(static::$video, 'channel_videos');
+      return $this->belongsToMany(static::$video, 'mpgroup_videos');
     }
 
     /**

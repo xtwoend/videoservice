@@ -21,6 +21,7 @@
 use Illuminate\Support\ServiceProvider;
 use Xtwoend\Videoplus\Video\Repositories\VideoRepository;
 use Xtwoend\Videoplus\Channels\Repositories\ChannelRepository;
+use Xtwoend\Videoplus\Groups\Repositories\GroupRepository;
 use Xtwoend\Videoplus\Posts\Repositories\PostRepository;
 use Xtwoend\Videoplus\Users\Repositories\UserRepository;
 use Xtwoend\Videoplus\Category\Repositories\CategoryRepository;
@@ -59,6 +60,7 @@ class VideoplusServiceProvider extends ServiceProvider {
 	{
 		$this->registerVideoRepository();
 		$this->registerChannelRepository();
+		$this->registerGroupRepository();
 		$this->registerPostRepository();
 		$this->registerUserRepository();
 		$this->registerCategoryRepository();
@@ -113,6 +115,23 @@ class VideoplusServiceProvider extends ServiceProvider {
 
 			//register post repository
 			return new ChannelRepository(new $class);
+		});
+	}
+
+	/**
+	* register Groups repository
+	*
+	*/
+	public function registerGroupRepository()
+	{
+		$this->app->bind('Xtwoend\Videoplus\Groups\GroupInterface', function($app)
+		{
+			// initial model post
+			$model = 'Xtwoend\Videoplus\Groups\Group';
+			$class = '\\'.ltrim($model, '\\');
+
+			//register post repository
+			return new GroupRepository(new $class);
 		});
 	}
 
@@ -256,7 +275,8 @@ class VideoplusServiceProvider extends ServiceProvider {
 		return array(
 				'Xtwoend\Videoplus\Channels\ChannelInterface',
 				'Xtwoend\Videoplus\Sliders\SlideInterface',
-				'Xtwoend\Videoplus\Video\VideoInterface'
+				'Xtwoend\Videoplus\Video\VideoInterface',
+				'Xtwoend\Videoplus\Groups\GroupInterface'
 				);
 	}
 }

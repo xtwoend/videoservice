@@ -48,6 +48,19 @@ trait VideoRelations {
         return $this->belongsToMany(static::$channel, 'channel_videos');
     }
 
+    /**
+     * Model Category
+     */
+    protected static $group = 'Xtwoend\Videoplus\Groups\Group';
+    
+    /**
+     *
+     * @params
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(static::$group, 'mpgroup_videos');
+    }
 
     /**
      * Model User
