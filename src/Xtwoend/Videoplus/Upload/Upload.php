@@ -44,6 +44,14 @@ class Upload {
 
         $request = new Request();
         $file = new File($config, $request);
+        $file_name = $request->getFileName(); 
+
+        $img_name = strtolower(pathinfo($file_name, PATHINFO_FILENAME));
+        $img_ext =  strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $new_file_name = md5($img_name . time()) . '.' .$img_ext;
+
+        $dest = $this->config['dest']. $new_file_name;
+        
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if ($file->checkChunk()) {
@@ -62,14 +70,14 @@ class Upload {
           }
         }
 
-        if ($file->validateFile() && $file->save($this->config['dest'].'/'.$request->getFileName())) 
+        if ($file->validateFile() && $file->save($dest)) 
         {
-          $path =  str_replace(public_path(), '', $this->config['dest'].'/'.$request->getFileName());
+          $path =  str_replace(public_path(), '', $dest);
           // File upload was complete
           return [  
                   'success'     => true, 
-                  'source'      => $this->config['dest'] .$request->getFileName(), 
-                  'original_name' => $request->getFileName(),
+                  'source'      => $dest, 
+                  'original_name' => $new_file_name,
                   'url_stream'  => \URL::to($path),
                   'size'        => $request->getTotalSize(),
                 ];
