@@ -72,7 +72,7 @@ class VideoRepository extends AbstractRepository implements VideoInterface , Abs
 	{
 		$video = $this->model;
 		$video->fill($attributes);
-
+		
 		return $video = $video->save();
 	}
 
@@ -88,6 +88,11 @@ class VideoRepository extends AbstractRepository implements VideoInterface , Abs
 		$model = $this->model->findOrNew($id);
 		$model->fill($attributes);
 		$model->save();
+
+		if(is_null($model->ticket)){
+			$model->ticket = $hashids->encode($model->id);
+			$model->save();
+		}
 
 		return $model;
 	}
