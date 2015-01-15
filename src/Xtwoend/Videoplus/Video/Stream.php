@@ -20,6 +20,7 @@
 
 use File;
 use Request;
+use Response;
 
 class Stream {	
 	
@@ -45,7 +46,7 @@ class Stream {
 
         if(File::isFile($file)){
         	
-            return $this->serveFilePartial($file);
+            return $this->stream($file)
 
         }else{
 
@@ -121,7 +122,7 @@ class Stream {
      * @doc
      * 
      */
-    public function oldStram()
+    public function stream($file)
     {
        
             if(Request::server('HTTP_RANGE', false)){
@@ -184,5 +185,23 @@ class Stream {
                 //throw new \Exception("Error Processing Request");
             }
     
+    }
+
+    /**
+     * @doc
+     * 
+     */
+    public function laravelStream($file)
+    {
+        $stream = $fs->readStream($file);
+        $headers = [
+            "Content-Type" => "video/mp4",
+            "Content-Length" => filesize($file),
+            "Content-disposition" => "attachment; filename=\"" . basename($file) . "\"",
+        ];
+
+        return Response::stream(function () use ($stream) {
+            fpassthru($stream);
+        }, 200, $headers);
     }
 }

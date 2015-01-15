@@ -85,4 +85,14 @@ class Group extends Model {
     {
         return $this->belongsTo(static::$user, 'owner_id');
     }
+
+
+    /**
+     * user follower  groups
+     * @params
+     */
+    public function followers()
+    {
+      return $this->belongsToMany(static::$user, 'group_users');
+    }
   }

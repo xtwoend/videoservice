@@ -86,4 +86,13 @@ class Channel extends Model {
     {
         return $this->belongsTo(static::$user, 'owner_id');
     }
+
+    /**
+     * user follower  channel
+     * @params
+     */
+    public function followers()
+    {
+      return $this->belongsToMany(static::$user, 'channel_users');
+    }
   }
