@@ -21,6 +21,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Xtwoend\News\Relations\PostRelations;
 use Xtwoend\Videoplus\Observers\SlugObserver;
+use Xtwoend\Videoplus\Observers\OwnerObserver;
 
 class Post extends Model {	
 
@@ -62,11 +63,26 @@ class Post extends Model {
     {
         parent::boot();
         static::observe(new SlugObserver);
+        static::observe(new OwnerObserver);
     }
 
+    /**
+     * Model User
+     */
+    protected static $user = 'Xtwoend\Videoplus\Users\User';
+    
+    /**
+     *
+     * @params
+     */
+    public function owner()
+    {
+        return $this->belongsTo(static::$user, 'owner_id');
+    }
 
-
-
+    /**
+     * Category Model
+     */
     protected static $category = 'Xtwoend\Videoplus\Category\Category';
     /**
      * @doc

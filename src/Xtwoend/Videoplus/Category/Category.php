@@ -50,7 +50,8 @@ class Category extends Model {
     'domain_url',
     'style_css',
     'lang',
-    'status'
+    'status',
+    'icon'
     ];
 
     /**
@@ -63,4 +64,17 @@ class Category extends Model {
       static::observe(new SlugObserver);
     }
 
+    /**
+     * Model posts
+     */
+    protected static $post = 'Xtwoend\Videoplus\Posts\Post';
+    
+    /**
+     *
+     * @params
+     */
+    public function posts()
+    {
+        return $this->hasMany(static::$post, 'category_id');
+    }
   }
