@@ -1,6 +1,6 @@
 <?php namespace Xtwoend\Videoplus\Tagging;
 
-use Xtwoend\Videoplus\Tagging\Models\Tag;
+use Xtwoend\Videoplus\Tagging\Models\Tag as TagModel;
 
 /**
  * Utility functions to help with various tagging functionality.
@@ -150,10 +150,10 @@ class TaggingUtil {
 	public static function incrementCount($tagString, $tagSlug, $count) {
 		if($count <= 0) { return; }
 
-		$tag = Tag::where('slug', '=', $tagSlug)->first();
+		$tag = TagModel::where('slug', '=', $tagSlug)->first();
 
 		if(!$tag) {
-			$tag = new Tag;
+			$tag = new TagModel;
 			$tag->name = $tagString;
 			$tag->slug = $tagSlug;
 			$tag->suggest = false;
@@ -173,7 +173,7 @@ class TaggingUtil {
 	public static function decrementCount($tagString, $tagSlug, $count) {
 		if($count <= 0) { return; }
 
-		$tag = Tag::where('slug', '=', $tagSlug)->first();
+		$tag = TagModel::where('slug', '=', $tagSlug)->first();
 
 		if($tag) {
 			$tag->count = $tag->count - $count;
