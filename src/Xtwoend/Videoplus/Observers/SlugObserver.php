@@ -28,7 +28,7 @@ class SlugObserver
     {
         // slug = null si vide
         $slug = (! is_null($model->slug)) ? $model->slug : null ;
-        $model->slug = Str::slug($slug,'');
+        $model->slug = Str::slug($slug,'-');
 
         if ($slug) {
             $i = 0;
@@ -45,7 +45,7 @@ class SlugObserver
     {
         // slug = null si vide
         $slug =  (! is_null($model->slug)) ? $model->slug : null ;
-        $model->slug =  Str::slug($slug,'');
+        $model->slug =  Str::slug($slug,'-');
 
         if ($slug) {
             $i = 0;

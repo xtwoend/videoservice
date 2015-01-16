@@ -54,7 +54,8 @@ class Competition extends Model {
     'briff_attach',
     'file_attach',
     'image',
-    'slug'
+    'slug',
+    'total_prize'
     ];
 
     /**
