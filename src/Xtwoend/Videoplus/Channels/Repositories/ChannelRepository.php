@@ -69,7 +69,7 @@ class ChannelRepository extends AbstractRepository implements ChannelInterface ,
   {
     $model = $this->model;
     $model->fill($attributes);
-    return $model = $model->save();
+    return $model = $model->save(['touch' => false]);
   }
 
   /**

@@ -77,4 +77,31 @@ class User extends Model implements SentryInterface {
     {
       return $this->belongsToMany('Xtwoend\Videoplus\Video\Video', 'watch_laters')->withTimestamps();
     }
+
+    /**
+     * @doc
+     * 
+     */
+    public function yourchannels()
+    {
+    	return $this->hasMany('Xtwoend\Videoplus\Channels\Channel', 'owner_id');
+    }
+
+    /**
+     * @doc
+     * Channel User
+     */
+    public function mpchannels()
+    {
+    	return $this->belongsToMany('Xtwoend\Videoplus\Channels\Channel', 'channel_users')->withTimestamps();
+    }
+
+    /**
+     * @doc
+     * Groups User
+     */
+    public function mpgroups()
+    {
+    	return $this->belongsToMany('Xtwoend\Videoplus\Groups\Group', 'group_users')->withTimestamps();
+    }
 }
