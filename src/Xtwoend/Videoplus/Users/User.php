@@ -23,6 +23,8 @@ use Cartalyst\Sentry\Users\UserInterface as SentryInterface;
 
 class User extends Model implements SentryInterface {	
 	
+
+
 	/**
 	 * The table associated with the model.
 	 *
@@ -30,7 +32,6 @@ class User extends Model implements SentryInterface {
 	 */
 	protected $table = 'users';
 
-	
 
 	/**
 	 * @doc
@@ -63,5 +64,17 @@ class User extends Model implements SentryInterface {
     	return $this->belongsToMany(get_class(), 'user_follows', 'follow_id', 'user_id');
     }
 
-	
+	/**
+	 * @doc
+	 * 
+	 */
+	public function activities()
+	{
+		return $this->hasMany('Xtwoend\Videoplus\Activity\Activity', 'owner_id');
+	}
+
+	public function watchlaters()
+    {
+      return $this->belongsToMany('Xtwoend\Videoplus\Video\Video', 'watch_laters')->withTimestamps();
+    }
 }

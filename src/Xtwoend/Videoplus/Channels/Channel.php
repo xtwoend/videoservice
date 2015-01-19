@@ -25,7 +25,10 @@ use Xtwoend\Videoplus\Observers\OwnerObserver;
 class Channel extends Model {
 
   //taging channel
-  use \Xtwoend\Videoplus\Tagging\Traits\Taggable;
+  use \Xtwoend\Videoplus\Tagging\Traits\Taggable;  
+  use \Xtwoend\Videoplus\Activity\Traits\Activitable;
+
+  protected $touches = array('followers');
 
   protected static $video = 'Xtwoend\Videoplus\Video\Video';
 
@@ -70,7 +73,7 @@ class Channel extends Model {
 
     public function videos()
     {
-      return $this->belongsToMany(static::$video, 'channel_videos');
+      return $this->belongsToMany(static::$video, 'channel_videos')->withTimestamps();
     }
 
     /**
@@ -93,6 +96,6 @@ class Channel extends Model {
      */
     public function followers()
     {
-      return $this->belongsToMany(static::$user, 'channel_users');
+      return $this->belongsToMany(static::$user, 'channel_users')->withTimestamps();
     }
   }

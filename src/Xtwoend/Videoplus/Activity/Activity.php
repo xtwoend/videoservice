@@ -18,5 +18,18 @@ class Activity extends Model {
     protected $fillable = array('owner_id','type','object_id','events');
 	
     
+    /**
+     * Model User
+     */
+    protected static $user = 'Xtwoend\Videoplus\Users\User';
+    
+    /**
+     *
+     * @params
+     */
+    public function owner()
+    {
+        return $this->belongsTo(static::$user, 'owner_id');
+    }
 
 }

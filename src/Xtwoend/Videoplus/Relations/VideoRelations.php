@@ -75,5 +75,5 @@ trait VideoRelations {
     {
         return $this->belongsTo(static::$user, 'owner_id');
     }
-
+    
 }

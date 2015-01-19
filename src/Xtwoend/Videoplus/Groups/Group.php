@@ -69,7 +69,7 @@ class Group extends Model {
 
     public function videos()
     {
-      return $this->belongsToMany(static::$video, 'mpgroup_videos');
+      return $this->belongsToMany(static::$video, 'mpgroup_videos')->withTimestamps();
     }
 
     /**
@@ -93,6 +93,6 @@ class Group extends Model {
      */
     public function followers()
     {
-      return $this->belongsToMany(static::$user, 'group_users');
+      return $this->belongsToMany(static::$user, 'group_users')->withTimestamps();
     }
   }
