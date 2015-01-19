@@ -89,6 +89,15 @@ class User extends Model implements SentryInterface {
 
     /**
      * @doc
+     * 
+     */
+    public function yourgroups()
+    {
+        return $this->hasMany('Xtwoend\Videoplus\Groups\Group', 'owner_id');
+    }
+
+    /**
+     * @doc
      * Channel User
      */
     public function mpchannels()
