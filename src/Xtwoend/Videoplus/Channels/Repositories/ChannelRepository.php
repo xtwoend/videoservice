@@ -80,6 +80,7 @@ class ChannelRepository extends AbstractRepository implements ChannelInterface ,
   {
     $model = $this->model->findOrNew($id);
     $model->fill($attributes);
+    $model->setTouchedRelations([]);
     $model->save();
 
     return $model;
