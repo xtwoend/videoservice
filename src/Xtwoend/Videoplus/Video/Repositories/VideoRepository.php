@@ -25,7 +25,7 @@ use Carbon\Carbon;
 use Xtwoend\Videoplus\Entities\AbstractRepository;
 use Xtwoend\Videoplus\Entities\AbstractRepositoryInterface;
 use Xtwoend\Videoplus\Video\VideoInterface;
-use Xtwoend\Videoplus\Video\Upload;
+use Xtwoend\Videoplus\Upload\Upload;
 
 class VideoRepository extends AbstractRepository implements VideoInterface , AbstractRepositoryInterface {
 
@@ -123,7 +123,7 @@ class VideoRepository extends AbstractRepository implements VideoInterface , Abs
 
 		$upload = new Upload($config);
 		if($file = $upload->start()){
-
+			
 			$hashids = new \Hashids\Hashids(\Config::get('app.key'), 7);
 			
 			$video = $this->model->create([
@@ -131,9 +131,9 @@ class VideoRepository extends AbstractRepository implements VideoInterface , Abs
 								'source_url'=> $file['url_stream'],
 								'path'		=> $file['source'],
 								'size'		=> $file['size'],
-								'duration'	=> $file['duration'],
-								'image'		=> $file['image'],
-								'source_type'	=> 'L'
+								//'duration'	=> $file['duration'],
+								'source_type' => 'L',
+								'raw_path'	=> $file['source']
 								]);
 
 			$video->ticket = $hashids->encode($video->id);

@@ -46,9 +46,9 @@ class Upload {
         $file = new File($config, $request);
         $file_name = $request->getFileName(); 
 
-        $img_name = strtolower(pathinfo($file_name, PATHINFO_FILENAME));
-        $img_ext =  strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-        $new_file_name = md5($img_name . time()) . '.' .$img_ext;
+        $file_name_without_ext = strtolower(pathinfo($file_name, PATHINFO_FILENAME));
+        $file_ext =  strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $new_file_name = md5($file_name_without_ext . time()) . '.' .$file_ext;
 
         $dest = $this->config['dest']. $new_file_name;
         
@@ -80,6 +80,7 @@ class Upload {
                   'original_name' => $new_file_name,
                   'url_stream'  => \URL::to($path),
                   'size'        => $request->getTotalSize(),
+                  'ext'         => $file_ext,
                 ];
 
 

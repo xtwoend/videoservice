@@ -51,6 +51,9 @@ class Video extends Model {
       'source_url',
       'source_type', // Y => youtube, V => Vimeo, L = Local Source
       'path',
+      'raw_path',
+      'convert_status',
+      'convert_id',
       'subtitle',
       'image',
       'owner_id',

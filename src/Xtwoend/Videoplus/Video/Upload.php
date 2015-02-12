@@ -18,6 +18,8 @@
  * @copyright  (c) 2014 
  */
 
+use PHPVideoToolkit;
+
 class Upload {	
 
     /**
@@ -27,6 +29,15 @@ class Upload {
     public function __construct($config)
     {
         $this->config = $config;
+
+        $config = new PHPVideoToolkit\Config(array(
+                'temp_directory' => base_path('temp'),
+                'ffmpeg' => '/usr/local/bin/ffmpeg',
+                'ffprobe' => '/usr/local/bin/ffprobe',
+                'yamdi' => '/usr/bin/yamdi',
+                'qtfaststart' => '/usr/local/bin/qt-faststart',
+                'cache_driver' => 'InTempDirectory',
+            ), true);
     }
 
 	  /**
@@ -42,10 +53,14 @@ class Upload {
         $file = new \Flow\File($config, $request);
         $file_name = $request->getFileName(); 
 
-        $img_name = strtolower(pathinfo($file_name, PATHINFO_FILENAME));
-        $img_ext =  strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-        $new_file_name = md5($img_name . time()) . '.' .$img_ext;
+        $file_origin_name = strtolower(pathinfo($file_name, PATHINFO_FILENAME));
+        $file_ext =  strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $new_file_name = md5($file_origin_name . time()) . '.' .$file_ext;
+        $new_convert_name = md5($file_origin_name . time()) . '.mp4'; 
         
+        //allow format
+        $allow_format = array('mp4','webm', 'ogg');
+
         $dest = $this->config['dest'].  $new_file_name;
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -67,19 +82,46 @@ class Upload {
 
         if ($file->validateFile() && $file->save($dest)) 
         {
-          $path =  str_replace(public_path(), '', $dest);
+
+          
           $duration = $this->getDuration($dest);
-          $image  = $this->createImage($dest, public_path('images/uploads/'.$new_file_name.'.jpg'));
-		      $img_url =  str_replace(public_path(), '', $image);
+          $img_url = $this->extract_image($file_origin_name,  $dest);
+          
+          $convert_status = 0;
+          $convert_id  = null;
+          $source_file = $dest;
+
+          if(! in_array(strtolower($file_ext), $allow_format)){
+            $convert_id = $this->convert($dest,  $this->config['dest']. $new_convert_name);
+            $convert_status = 1;
+            $source_file = $this->config['dest']. $new_convert_name;
+          }else{          
+
+            $parser = new PHPVideoToolkit\MediaParser();
+            $videoInfo = $parser->getFileInformation($dest);
+
+            if($videoInfo['video']['dimensions']['height'] > 480){
+              $convert_id = $this->convert($dest,  $this->config['dest']. $new_convert_name);
+              $convert_status = 1;
+              $source_file = $this->config['dest']. $new_convert_name;
+            }
+          }
+
+          $video_stream =  str_replace(public_path(), '', $source_file);
+          $img_url =  str_replace(public_path(), '', $img_url);
+
           // File upload was complete
           return [  
                   'success'     => true, 
-                  'source'      => $dest, 
+                  'source'      => $source_file,
+                  'source_raw'  => $dest,
                   'original_name' => $new_file_name,
-                  'url_stream'  => \URL::to($path),
+                  'url_stream'  => \URL::to($video_stream),
                   'size'        => $request->getTotalSize(),
                   'duration'    => $duration,
-                  'image'       => \URL::to($img_url),
+                  'image'       => $img_url,
+                  'convert_status'  => $convert_status,
+                  'convert_id'  => $convert_id
                 ];
 
 
@@ -128,24 +170,26 @@ class Upload {
      * 
      */
     public function convert($file, $output)
+    { 
+  
+        $videoffmpeg  = new PHPVideoToolkit\Video($file);
+        $output_format = new PHPVideoToolkit\VideoFormat_Mp4();
+
+        $output_format->setVideoRotation(true)
+                        ->setVideoDimensions(852, 480);
+
+        $process = $videoffmpeg->saveNonBlocking($output, $output_format, PHPVideoToolkit\Video::OVERWRITE_EXISTING);          
+                
+        return $videoffmpeg->getPortableId();    
+    }
+
+    private function extract_image($name, $path)
     {
-        $ffmpeg = FFMpeg\FFMpeg::create();
-        $video = $ffmpeg->open($file);
+      $pathvideo  = new PHPVideoToolkit\Video($path);
+      $imagepath = public_path('images/uploads/'.md5($name . time()).'.jpg');
+      $process = $pathvideo->extractFrame(new PHPVideoToolkit\Timecode(10))
+                            ->save($imagepath, null, PHPVideoToolkit\Media::OVERWRITE_EXISTING);
 
-
-        $format = new Format\Video\X264();
-        $format->on('progress', function ($video, $format, $percentage) {
-            echo "$percentage % transcoded";
-        });
-
-        $format
-            -> setKiloBitrate(1000)
-            -> setAudioChannels(2)
-            -> setAudioKiloBitrate(256);
-
-        $video
-            ->save($format, $output);
-
-        return $output;
+      return \URL::to($imagepath);
     }
 }
