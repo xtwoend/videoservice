@@ -89,7 +89,7 @@ class VideoRepository extends AbstractRepository implements VideoInterface , Abs
 		$model->fill($attributes);
 		$model->save();
 
-		if(is_null($model->ticket)){
+		if($model->ticket == '' OR is_null($model->ticket)){
 			$model->ticket = $hashids->encode($model->id);
 			$model->save();
 		}
