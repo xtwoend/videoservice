@@ -45,6 +45,7 @@ class Video extends Model {
 
     protected $fillable = [
       'ticket',
+      'token',
       'slug',
       'title',
       'description',

@@ -44,6 +44,6 @@ interface VideoInterface {
 	 * @doc
 	 *
 	 */
-	public function upload($destionation);
+	public function upload($destionation, $token);
 
 }

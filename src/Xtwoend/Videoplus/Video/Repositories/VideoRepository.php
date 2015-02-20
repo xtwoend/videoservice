@@ -114,7 +114,7 @@ class VideoRepository extends AbstractRepository implements VideoInterface , Abs
 	 * @doc
 	 *
 	 */
-	public function upload($detination)
+	public function upload($detination, $token)
 	{
 		$config = array(
                     'temp'  => base_path('temp'),
@@ -122,6 +122,7 @@ class VideoRepository extends AbstractRepository implements VideoInterface , Abs
                 );
 
 		$upload = new Upload($config);
+		
 		if($file = $upload->start()){
 			
 			$hashids = new \Hashids\Hashids(\Config::get('app.key'), 7);
@@ -133,9 +134,10 @@ class VideoRepository extends AbstractRepository implements VideoInterface , Abs
 								'size'		=> $file['size'],
 								//'duration'	=> $file['duration'],
 								'source_type' => 'L',
-								'raw_path'	=> $file['source']
+								'raw_path'	=> $file['source'],
+								'token'	=> $token
 								]);
-
+			
 			$video->ticket = $hashids->encode($video->id);
 			$video->save();
 			return $video;
