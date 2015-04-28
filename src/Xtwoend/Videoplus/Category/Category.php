@@ -77,4 +77,19 @@ class Category extends Model {
     {
         return $this->hasMany(static::$post, 'category_id');
     }
+
+    /**
+     * Model channels
+     */
+    protected static $channel = 'Xtwoend\Videoplus\Channels\Channel';
+
+    /**
+     * .
+     *
+     * @return
+     */
+    public function channels()
+    {
+         return $this->hasMany(static::$channel, 'category_id');
+    }
   }

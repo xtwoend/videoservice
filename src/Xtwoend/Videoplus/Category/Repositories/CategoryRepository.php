@@ -60,6 +60,17 @@ class CategoryRepository extends AbstractRepository implements CategoryInterface
 		$this->model = $model;
 	}
 
+	/**
+	 * channels.
+	 *
+	 * @return
+	 */
+	public function channels()
+	{
+		$model = $this->model->where('cat_type', 2)->get();
+
+		return $model;
+	}
 
 	/**
 	 * @doc
